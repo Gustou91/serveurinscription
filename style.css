@@ -1,0 +1,25 @@
+a:link { color:blue; text-decoration:none; }
+a:visited { color:blue; text-decoration:none; }
+a:hover { color:red; text-decoration:none; }
+
+table { border-collapse:collapse; valign:middle;}
+td { padding:0px; }
+th { text-align:center; }
+
+img { border:0px; }
+form {padding:0px; margin:0px; }
+body { background:#ACF1FE; }
+
+.table1 { background:#f7f7f7; font-size:12px; font-family:Arial; valign:middle;}
+.table1 th { padding: 3px; border: 2px groove; background:#dfdfdf; }
+.table1 td { padding-right:1px; border: 1px solid #6f6f6f; }
+
+.table2 { width:50%; background:#f7f7f7; valign:middle;}
+.table2 th { padding: 3px; border: 2px groove; background:#dfdfdf; }
+.table2 td { padding: 3px; border: 2px groove; }
+
+.table3 td { padding: 3px; border: none; valign:middle;}
+
+.table4 { background:#f7f7f7; valign:middle;}
+.table4 th { padding: 3px; border: 2px groove; background:#dfdfdf;}
+.table4 td { padding: 3px; border: 2px groove;}

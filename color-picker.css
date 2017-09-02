@@ -1,0 +1,28 @@
+.color-picker
+    { border: 0; padding: 0; margin: 0; font-family: Tahoma; font-size: 12px;}
+.color-picker table, .color-picker td
+    { border: 0; margin: 0; padding: 0; vertical-align: top;}   
+.color-picker label
+    { margin: 4px 0; display: block;}
+.cp-container
+    { position: relative; float: left; border: solid 1px #000; padding: 0px; }
+.cp-layer1, .cp-layer2, .cp-layer3, .cp-layer4
+    { display: block; position: absolute; top: 0px; left: 0px; }   
+.cp-map
+    { width: 256px; height: 256px; margin: 0px; }
+.cp-map div
+    { width: 256px; height: 256px; position: absolute; top: 0; left: 0; background: transparent url(maps.png) 0px 0px no-repeat;}
+.cp-bar
+    { width: 20px; height: 256px; margin: 0px 9px;}
+.cp-bar div
+    { width: 20px; height: 256px; position: absolute; top: 0; left: 0; background: transparent url(bars.png) 0px 0px no-repeat;}
+.cp-preview
+    { width: 60px; height: 60px; padding: 0px; margin: 0px; border: solid 1px #000; }
+.cp-hsv, .cp-rgb
+    { width: 40px; }
+.cp-hex
+    { width: 55px; }
+.cp-map-arrow
+    { background: transparent url(map-arrow.gif) 0px 0px no-repeat; width: 40px; height: 9px; position: absolute;}
+.cp-bar-arrow
+    { background: transparent url(bar-arrow.gif) 0px 0px no-repeat; width: 15px; height: 15px; position: absolute;}
