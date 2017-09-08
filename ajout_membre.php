@@ -293,10 +293,12 @@
 	{
 		echo "<option value=0>- ville -</option>";
 	}
-		$ville = mysql_query("SELECT * FROM villes WHERE actif = '1' ORDER BY ville;");
-		while($boucle = mysql_fetch_array($ville)){
+	$ville = mysql_query("SELECT * FROM villes WHERE actif = '1' ORDER BY ville;");
+	while($boucle = mysql_fetch_array($ville)){
 		echo "<option value=".$boucle[0].">".$boucle[3]."</option>";
-		if ($i==0) { $j=$boucle[0]; $i=1; }
+		if ($i==0) { 
+			$j=$boucle[0]; $i=1; 
+		}
 	}
 ?>
 		</select>

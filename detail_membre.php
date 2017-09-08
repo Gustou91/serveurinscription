@@ -44,127 +44,163 @@
 	}
 </script>
 <?php
-include "restrict/config.php";
-$variable = 0;
-mysql_connect($adresse, $user, $pass);
-mysql_select_db($bdd);mysql_set_charset( 'ansi' );
-if(isset($_POST['sexe'])){
-$sexe = mysql_real_escape_string(htmlspecialchars($_POST['sexe']));
-}else{$sexe="";}
-//&eacute;criture dans la base BOX
-if(	isset($_POST["nom"]) && !empty($_POST["nom"]) &&
-	isset($_POST["prenom"]) && !empty($_POST["prenom"]) &&
-	isset($_POST["representants"]) && !empty($_POST["representants"]) &&
-	isset($_POST["adresse"]) && !empty($_POST["adresse"]) &&
-	isset($_POST["cp"]) && !empty($_POST["cp"]) &&
-	isset($_POST["ville"]) && !empty($_POST["ville"]) &&
-	isset($_POST["mail"]) && !empty($_POST["mail"]) &&
-	isset($_POST["urgence"]) && !empty($_POST["urgence"]) &&
-	isset($_POST["jj"]) && !empty($_POST["jj"]) &&
-	isset($_POST["mm"]) && !empty($_POST["mm"]) &&
-	isset($_POST["aaaa"]) && !empty($_POST["aaaa"]) &&
-	isset($_POST["sexe"]) && !empty($_POST["sexe"])){
-//control si le BOX existe
+	include "restrict/config.php";
+	
+	require_once "includes/log4php/Logger.php";
 
-$nom = strtoupper(mysql_real_escape_string(htmlspecialchars($_POST['nom'])));
-$prenom = ucwords(mysql_real_escape_string(htmlspecialchars($_POST['prenom'])));
+	Logger::configure('init/config.xml');
+	$log = Logger::getLogger('TRACE');
+	$logError = Logger::getLogger('ERROR');
 
-$jj = mysql_real_escape_string(htmlspecialchars($_POST['jj']));
-$mm = mysql_real_escape_string(htmlspecialchars($_POST['mm']));
-$aaaa = mysql_real_escape_string(htmlspecialchars($_POST['aaaa']));
-$poids = mysql_real_escape_string(htmlspecialchars($_POST['poids']));
-$representants = mysql_real_escape_string(htmlspecialchars($_POST['representants']));
-$profession1 = mysql_real_escape_string(htmlspecialchars($_POST['profession1']));
-$profession2 = mysql_real_escape_string(htmlspecialchars($_POST['profession2']));
-$adresse = mysql_real_escape_string(htmlspecialchars($_POST['adresse']));
-$cp = mysql_real_escape_string(htmlspecialchars($_POST['cp']));
-$ville = mysql_real_escape_string(htmlspecialchars($_POST['ville']));
-$mail = mysql_real_escape_string(htmlspecialchars($_POST['mail']));
-$tel_dom = mysql_real_escape_string(htmlspecialchars($_POST['tel_dom']));
-$tel_port = mysql_real_escape_string(htmlspecialchars($_POST['tel_port']));
-$urgence = mysql_real_escape_string(htmlspecialchars($_POST['urgence']));
-$tel_urg = mysql_real_escape_string(htmlspecialchars($_POST['tel_urg']));
-$obs = mysql_real_escape_string(htmlspecialchars(addslashes($_POST['obs'])));
-$id_membre = $_POST["id_membre"];
-if(!filter_var($mail, FILTER_VALIDATE_EMAIL)){
+	$log->trace("DétailMembre - Début Détail membre.");
+	
+	$variable = 0;
+	mysql_connect($adresse, $user, $pass);
+	mysql_select_db($bdd);mysql_set_charset( 'ansi' );
+	if(isset($_POST['sexe'])){
+		$sexe = mysql_real_escape_string(htmlspecialchars($_POST['sexe']));
+	} else {
+		$sexe = "";
+	}
+	
+	//Ecriture dans la base BOX
+	if(	isset($_POST["nom"]) && !empty($_POST["nom"]) &&
+		isset($_POST["prenom"]) && !empty($_POST["prenom"]) &&
+		isset($_POST["representants"]) && !empty($_POST["representants"]) &&
+		isset($_POST["adresse"]) && !empty($_POST["adresse"]) &&
+		isset($_POST["cp"]) && !empty($_POST["cp"]) &&
+		isset($_POST["ville"]) && !empty($_POST["ville"]) &&
+		isset($_POST["mail"]) && !empty($_POST["mail"]) &&
+		isset($_POST["urgence"]) && !empty($_POST["urgence"]) &&
+		isset($_POST["jj"]) && !empty($_POST["jj"]) &&
+		isset($_POST["mm"]) && !empty($_POST["mm"]) &&
+		isset($_POST["aaaa"]) && !empty($_POST["aaaa"]) &&
+		isset($_POST["sexe"]) && !empty($_POST["sexe"])){
+		//control si le BOX existe
+
+		$nom = strtoupper(mysql_real_escape_string(htmlspecialchars($_POST['nom'])));
+		$prenom = ucwords(mysql_real_escape_string(htmlspecialchars($_POST['prenom'])));
+
+		$jj = mysql_real_escape_string(htmlspecialchars($_POST['jj']));
+		$mm = mysql_real_escape_string(htmlspecialchars($_POST['mm']));
+		$aaaa = mysql_real_escape_string(htmlspecialchars($_POST['aaaa']));
+		$poids = mysql_real_escape_string(htmlspecialchars($_POST['poids']));
+		$representants = mysql_real_escape_string(htmlspecialchars($_POST['representants']));
+		$profession1 = mysql_real_escape_string(htmlspecialchars($_POST['profession1']));
+		$profession2 = mysql_real_escape_string(htmlspecialchars($_POST['profession2']));
+		$adresse = mysql_real_escape_string(htmlspecialchars($_POST['adresse']));
+		$cp = mysql_real_escape_string(htmlspecialchars($_POST['cp']));
+		$ville = mysql_real_escape_string(htmlspecialchars($_POST['ville']));
+		$mail = mysql_real_escape_string(htmlspecialchars($_POST['mail']));
+		$tel_dom = mysql_real_escape_string(htmlspecialchars($_POST['tel_dom']));
+		$tel_port = mysql_real_escape_string(htmlspecialchars($_POST['tel_port']));
+		$urgence = mysql_real_escape_string(htmlspecialchars($_POST['urgence']));
+		$tel_urg = mysql_real_escape_string(htmlspecialchars($_POST['tel_urg']));
+		$obs = mysql_real_escape_string(htmlspecialchars(addslashes($_POST['obs'])));
+		$id_membre = $_POST["id_membre"];
+		
+		if(!filter_var($mail, FILTER_VALIDATE_EMAIL)){
 ?>
 <script>alert ("Il y a eu une erreur de saisie\nconcernant l'adresse mail.")</script>
 <?php
-}else{
-//inscription de l'activite dans la base
-mysql_query("UPDATE membres SET nom='$nom', prenom='$prenom', sexe='$sexe', jj='$jj', mm='$mm', aaaa='$aaaa', poids='$poids', representants='$representants', profession1='$profession1', profession2='$profession2', adresse='$adresse', cp='$cp', ville='$ville', mail='$mail', tel_dom='$tel_dom', tel_port='$tel_port', urgence='$urgence', tel_urg='$tel_urg', obs='$obs' WHERE id='$id_membre'")or die(mysql_error());
-//fin d'inscription de l'activite dans la base
-}
-mysql_close();
-//fin travail sur BDD
-$variable = 1;
-$_POST = "";
-}
-//donn&eacute;e manquante pour une nouvelle activite
-elseif(	isset($_POST["nom"]) &&
-		isset($_POST["prenom"]) &&
-		isset($_POST["representants"]) &&
-		isset($_POST["adresse"]) &&
-		isset($_POST["cp"]) &&
-		isset($_POST["ville"]) &&
-		isset($_POST["mail"]) &&
-		isset($_POST["urgence"]) &&
-		isset($_POST["jj"]) &&
-		isset($_POST["mm"]) &&
-		isset($_POST["aaaa"]) &&
-		($sexe == "")){
+		} elseif($ville == 0) { 
+		
+			// La ville n'est pas renseignée.
+?>
+<script>alert ("La ville n'est pas renseignée.")</script>
+<?php
+		} else {
+			$log->trace("DétailMembre: Modifications enregistrées.");
+			//inscription de l'activite dans la base
+			mysql_query("UPDATE membres SET nom='$nom', prenom='$prenom', sexe='$sexe', jj='$jj', mm='$mm', aaaa='$aaaa', poids='$poids', representants='$representants', profession1='$profession1', profession2='$profession2', adresse='$adresse', cp='$cp', ville='$ville', mail='$mail', tel_dom='$tel_dom', tel_port='$tel_port', urgence='$urgence', tel_urg='$tel_urg', obs='$obs' WHERE id='$id_membre'")or die(mysql_error());
+			//fin d'inscription de l'activite dans la base
+?>
+<script>alert ("Modifications enregistrées.")</script>
+<?php
+		}
+		mysql_close();
+		//fin travail sur BDD
+		$variable = 1;
+		$_POST = "";
+	}
+	//données manquantes pour une nouvelle activite
+	elseif(	isset($_POST["nom"]) &&
+			isset($_POST["prenom"]) &&
+			isset($_POST["representants"]) &&
+			isset($_POST["adresse"]) &&
+			isset($_POST["cp"]) &&
+			isset($_POST["ville"]) &&
+			isset($_POST["mail"]) &&
+			isset($_POST["urgence"]) &&
+			isset($_POST["jj"]) &&
+			isset($_POST["mm"]) &&
+			isset($_POST["aaaa"]) &&
+			($sexe == "")){
+				$log->trace("DétailMembre: Il manque au moins une donnée concernant le membre");
 ?>
 <script>alert ("Il manque au moins une donnée\nconcernant le membre")</script>
 <?php
-}
-if ($variable == 1){
+	}
+	if ($variable == 1){
 ?>
 <center><br>
 Membre modifi&eacute; avec succes<br><br>
 <?php
-if((($_REQUEST['page'])) == "consulter_membres"){
+		if((($_REQUEST['page'])) == "consulter_membres"){
 ?>
 <input type="button" value="FERMER" onclick="Javascript:window.close(); opener.location = 'consulter_membres.php';">
 <?php
-}
-elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
+		}
+		elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
 ?>
 <input type="button" value="FERMER" onClick="OpenBooking_ferme()">
 <?php
-}
+		}
 ?>
 
 </center>
 <?php
-}
-elseif((isset($_REQUEST["id_membre"]) && !empty($_REQUEST["id_membre"]))){
-$id = $_REQUEST["id_membre"];
-mysql_connect($adresse, $user, $pass);
-mysql_select_db($bdd);mysql_set_charset( 'utf8' );
-$membre = mysql_query("SELECT * FROM membres WHERE id='$id'");
-$membre = mysql_fetch_array($membre);
-$parametres = mysql_query("SELECT * FROM generale WHERE nom='modif_membre'");
-$parametres = mysql_fetch_array($parametres);
-mysql_close();
+	}
+	elseif((isset($_REQUEST["id_membre"]) && !empty($_REQUEST["id_membre"]))){
+		$id = $_REQUEST["id_membre"];
+		mysql_connect($adresse, $user, $pass);
+		mysql_select_db($bdd);mysql_set_charset( 'utf8' );
+		$membre = mysql_query("SELECT * FROM membres WHERE id='$id'");
+		$membre = mysql_fetch_array($membre);
+		$parametres = mysql_query("SELECT * FROM generale WHERE nom='modif_membre'");
+		$parametres = mysql_fetch_array($parametres);
+		mysql_close();
 
-//fin donn&eacute;e manquante pour une activite
-//fin &eacute;criture dans la base activites
+		//fin donn&eacute;e manquante pour une activite
+		//fin &eacute;criture dans la base activites
 ?>
 <body onload="calcul_ans()">
 <center>
 <fieldset align="center" style="height=max; width=max">
-<legend>Modifier <?php if($membre['sexe'] == "M"){echo "Mr. ";} elseif($membre['sexe'] == "F"){echo "Mme. ";} echo $membre['nom']; echo "&nbsp;"; echo $membre['prenom']?>&nbsp;</legend>
+<legend>Modifier 
+<?php 
+	if($membre['sexe'] == "M"){
+		echo "Mr. ";
+	} elseif($membre['sexe'] == "F"){
+		echo "Mme. ";
+	} 
+	echo $membre['nom']; 
+	echo "&nbsp;"; 
+	echo $membre['prenom']
+?>&nbsp;</legend>
 
 <?php
-if((($_REQUEST['page'])) == "consulter_membres"){
+	if((($_REQUEST['page'])) == "consulter_membres"){
 ?>
 <form method="post" action="detail_membre.php?page=consulter_membres">
-	<?php
-}
-elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
+<?php
+	}
+	elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
 ?>
 <form method="post" action="detail_membre.php?de_aaaa=<?php echo ($_REQUEST['de_aaaa']);?>&a_aaaa=<?php echo ($_REQUEST['a_aaaa']);?>&type=<?php echo ($_REQUEST['type']);?>&page=recherche_anniversaire">
-<?php } ?>
+<?php
+	}
+?>
 	<br>
 	<table border=0>
 	<tr>
@@ -227,31 +263,35 @@ elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
 	<td align=left>
 		<font color=red><b>Ville : </b></font>
 		<select size='1' name='ville' title="Choix de la ville" OnChange="sendData('id='+this.value,'requete_ville_to_cp.php')" onKeyUp="sendData('id='+this.value,'requete_ville_to_cp.php')">
-		<?php
-		$i=0; // variable de test
-		$j=0; // variable pour garder la valeur du premier enregistrement catégorie pour l'affichage
-		echo "<option value=0>- ville -</option>";
-		mysql_connect($adresse, $user, $pass);
-		mysql_select_db($bdd);mysql_set_charset( 'ansi' );
-		$ville = mysql_query("SELECT * FROM villes WHERE actif = '1' ORDER BY ville;");
-		while($boucle = mysql_fetch_array($ville)){
+<?php
+	$i=0; // variable de test
+	$j=0; // variable pour garder la valeur du premier enregistrement catégorie pour l'affichage
+	echo "<option value=0>- ville -</option>";
+	mysql_connect($adresse, $user, $pass);
+	mysql_select_db($bdd);mysql_set_charset( 'ansi' );
+	$ville = mysql_query("SELECT * FROM villes WHERE actif = '1' ORDER BY ville;");
+	while($boucle = mysql_fetch_array($ville)){
 		if($membre['ville'] == $boucle[0]){
 			echo "<option value='".$boucle[0]."' selected>".$boucle[3]."</option>";
-		}else{
+		} else {
 			echo "<option value='".$boucle[0]."'>".$boucle[3]."</option>";
 		}
-		if ($i==0) { $j=$boucle[0]; $i=1; }
+		if ($i==0) { 
+			$j=$boucle[0]; $i=1; 
 		}
-		?>
+	}
+?>
 		</select>
-		<?php
-		if(!is_numeric($membre['ville'])){echo "<br><font size=2>".$membre['ville']."</font>";}
-		?>
+<?php
+	if(!is_numeric($membre['ville'])){
+		echo "<br><font size=2>".$membre['ville']."</font>";
+	}
+?>
 	</td>
 	<td></td>
 	<td align=left id="contenu" width=200>
 	<font color=red><b>CP : </b></font>
-	<?php  
+<?php  
 	// affichage des sous-catégorie appartenant à la première catégorie.
 		
     $rq="Select * from cp where (id=".$j.");";
@@ -259,9 +299,13 @@ elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
      // $i = initialise le variable i
     $i=0;
     $cp = mysql_fetch_array($result);
-	if(isset($_POST["cp"])){ $retour_cp=$_POST["cp"]; }else{ $retour_cp=$membre['cp']; }
+	if(isset($_POST["cp"])){ 
+		$retour_cp=$_POST["cp"]; 
+	} else { 
+		$retour_cp=$membre['cp']; 
+	}
 	echo "<input type=\"text\" name=\"cp\" size=\"4\" maxlength=\"5\" value=\"".$retour_cp."\">";  
-	?>
+?>
 	
 	</td>
 	</td>
@@ -300,18 +344,17 @@ elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
 	</table>
 		Observations : <br><textarea name="obs" cols="33" rows="5"><?php if(isset($_POST["obs"])){ echo $_POST["obs"];} else {echo stripslashes($membre['obs']);} ?></textarea><br><br>
 <?php
-
-if($parametres['valeur'] == "OUI"){
+	if($parametres['valeur'] == "OUI"){
 ?>
 		<input type="submit" value="Enregistrer">&nbsp;&nbsp;&nbsp;<input type="reset" value="Effacer">&nbsp;&nbsp;&nbsp;
-<?php } 
-
-if((($_REQUEST['page'])) == "consulter_membres"){
+<?php
+	} 
+	if((($_REQUEST['page'])) == "consulter_membres"){
 ?>
 <input type="button" value="FERMER" onclick="Javascript:window.close(); opener.location = 'consulter_membres.php?page=1';">
 <?php
-}
-elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
+	}
+	elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
 ?>
 <script type="text/javascript">
 		function OpenBooking_ferme1() {
@@ -321,12 +364,14 @@ elseif((($_REQUEST['page'])) == "recherche_anniversaire"){
 </script>
 <input type="button" value="FERMER" onClick="OpenBooking_ferme1()">
 <?php
-}
+	}
 ?>
 		<input type="hidden" name="id_membre" value="<?php echo $id;?>">
 	</form>
 </fieldset>
 </center>
-<?php } ?>
+<?php
+	}
+?>
 </body>
 </html>

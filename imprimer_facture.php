@@ -287,7 +287,7 @@
 		if (!$listCours) {
 			$log->trace("Cours pour inscription $id_inscription non trouvés.");
 			$log->trace(mysql_error());
-			die('Cours non trouvée.');
+			die('Cours non trouvé.');
 		}
 		
 		// Récupération des données.

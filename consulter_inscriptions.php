@@ -1,17 +1,26 @@
-<?php include "restrict/config.php";
-mysql_connect($adresse, $user, $pass);
-mysql_select_db($bdd);mysql_set_charset( 'ansi' );
-$couleur_01 = mysql_query("SELECT valeur FROM generale WHERE nom='couleur_01'");
-$couleur_01 = mysql_fetch_array($couleur_01);
-$couleur_02 = mysql_query("SELECT valeur FROM generale WHERE nom='couleur_02'");
-$couleur_02 = mysql_fetch_array($couleur_02);
-$saison_demande = $_POST['saison'];
-if ($saison_demande == ""){$saison_demande = $_GET['saison'];}
-$saisons = mysql_query("SELECT saison FROM inscriptions WHERE actif = '1' AND saison = '$saison_demande' ORDER BY saison");
-$sup_parametres = mysql_query("SELECT valeur FROM generale WHERE nom='sup_inscription'");
-$sup_parametres = mysql_fetch_array($sup_parametres);
-$modif_parametres = mysql_query("SELECT valeur FROM generale WHERE nom='modif_inscription'");
-$modif_parametres = mysql_fetch_array($modif_parametres);
+<?php 
+	include "restrict/config.php";
+	require_once "includes/log4php/Logger.php";
+
+	Logger::configure('init/config.xml');
+	$log = Logger::getLogger('TRACE');
+	$logError = Logger::getLogger('ERROR');
+
+	$log->trace("Début liste des adhérents.");
+	
+	mysql_connect($adresse, $user, $pass);
+	mysql_select_db($bdd);mysql_set_charset( 'ansi' );
+	$couleur_01 = mysql_query("SELECT valeur FROM generale WHERE nom='couleur_01'");
+	$couleur_01 = mysql_fetch_array($couleur_01);
+	$couleur_02 = mysql_query("SELECT valeur FROM generale WHERE nom='couleur_02'");
+	$couleur_02 = mysql_fetch_array($couleur_02);
+	$saison_demande = $_POST['saison'];
+	if ($saison_demande == ""){$saison_demande = $_GET['saison'];}
+	$saisons = mysql_query("SELECT saison FROM inscriptions WHERE actif = '1' AND saison = '$saison_demande' ORDER BY saison");
+	$sup_parametres = mysql_query("SELECT valeur FROM generale WHERE nom='sup_inscription'");
+	$sup_parametres = mysql_fetch_array($sup_parametres);
+	$modif_parametres = mysql_query("SELECT valeur FROM generale WHERE nom='modif_inscription'");
+	$modif_parametres = mysql_fetch_array($modif_parametres);
 ?>
 <html>
 <head>
@@ -28,6 +37,9 @@ $modif_parametres = mysql_fetch_array($modif_parametres);
 		function OpenFacture(id) {
 			window.open("imprimer_facture.php?id_inscription=" + id, "Facture", "resizable = yes, scrollbars = yes,location=no, status=no, menubar=no, width=1100, height=750, left=" + (screen.width-1100)/2 + ", top=" + (screen.height-750)/2);
 		}
+		function PrintList(saison) {
+			window.open("liste_adherents.php?saison=" + saison, "Liste des adhérents", "resizable = yes, scrollbars = yes,location=no, status=no, menubar=no, width=1100, height=750, left=" + (screen.width-1100)/2 + ", top=" + (screen.height-750)/2);
+		}
 </script>
 </head>
 <body>
@@ -36,12 +48,17 @@ $modif_parametres = mysql_fetch_array($modif_parametres);
 <?php
 $saison="";
 while($boucle_saison = mysql_fetch_array($saisons)){
-if ($saison !=$boucle_saison['saison']){
-$saison = $boucle_saison['saison'];
-echo "<tr><td>";
+	if ($saison !=$boucle_saison['saison']){
+		$saison = $boucle_saison['saison'];
+		echo "<tr><td>";
 ?>
 <fieldset align="center" style="height=max; width=max">
 <legend><font color=blue><b>Membres inscrits pour la saison <?php echo $saison; ?>&nbsp;</b></font></legend>
+<?php
+	$cmd = "<button onClick=\"PrintList('".$saison."')\" title=\"Imprimer la liste\">Imprimer la liste</button>";
+	$log->trace("Commande = ".$cmd);
+	echo $cmd;
+?>
 <center><br>
 <table class="table4" summary="">
 <th>Nom</th>

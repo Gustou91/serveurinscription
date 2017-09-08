@@ -284,7 +284,7 @@ function banque(valeur, id)
 	$saison = mysql_fetch_array($saison);
 	$annee_actu=$annee_actu+$saison[0];
 	$annee_suivante=$annee_actu+1;
-	echo "FEUILLE D'INSCRIPTION POUR<br>";
+	echo "FEUILLE D'INSCRIPTION POUR";
 	$membre = mysql_query("SELECT id, nom, prenom, aaaa FROM membres WHERE actif = '1' ORDER BY nom");
 ?>
 <form method="post" name="formulaire">
@@ -695,7 +695,10 @@ Paiements N° <font color=DeepPink><b>4 </b></font><?php echo Liste_deroulante_mo
 </tr>
 <tr>
 <td align=center colspan=3>
-Observations (précisez parrain et parrainé) : <br><textarea name="obs" cols="33" rows="5"><?php echo $obs; ?></textarea>
+Observations (précisez parrain, filleul, Autres membres de la famille, Paiement par coupon, Sommes payées et à venir) : <br>
+<b>Pour le parrain</b>, ajoutez la mention: <font color=blue><b>Parrainage de + nom</b></font>. <b>Pour le filleul</b>, ajoutez la mention: <font color=blue><b>Parrainé par + nom</b></font><br>
+IL EST IMPORTANT DE RESPECTER LA FORMULATION ET LA CASSE<br>
+<textarea name="obs" cols="100" rows="5"><?php echo $obs; ?></textarea>
 </td>
 </tr>
 <?php
