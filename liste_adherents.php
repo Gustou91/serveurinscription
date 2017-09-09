@@ -47,7 +47,7 @@
 			'T_SIZE' => 12,
 			'T_FONT' => 'Arial',
 			'T_ALIGN' => 'C',
-			'V_ALIGN' => 'T',
+			'V_ALIGN' => 'M',
 			'T_TYPE' => 'B',
 			'LN_SIZE' => 6,
 			'BG_COLOR_COL0' => array(113, 163, 15),
@@ -90,13 +90,14 @@
 		$PDF->AddPage();
 		$PDF->SetSubject("Liste des adhérents", true);
 
+		$PDF->Image('img/LOGO-JUJITSO2.jpg',10,10,20);
 		$PDF->Cell(50);
 		$PDF->SetFont('Arial','B',18);
 		$PDF->Write($margeH,'Association'); 
 		$PDF->SetFont('');
 		
 		$PDF->Write($margeH,'"USM – JU JIT SO"');
-		$PDF->Write(12, "\n");
+		$PDF->Write(12, "\n\n");
 		
 		
 		
@@ -115,15 +116,16 @@
 			die('Aucun cours trouvé.');
 		}
 		
+		$nbcours = mysql_num_rows($listCours);
+		$nocours = 1;
+		$log->trace("Nombre de cours = ".$nbcours);
+		
 		// Boucle sur les cours trouvés.
 		while ($rowCours = mysql_fetch_assoc($listCours)) {
 			
+			$log->trace("Cours ".$nocours);
 			$contenuTableau = array();
-
-			$PDF->SetFont('Arial','B',14);
-			$PDF->Cell(0, 10, "Cours ".$rowCours['nom'], 1, 1, "C", false);
-			$PDF->SetFont('');
-			$PDF->ln();
+			
 			
 			// Récupération de la liste des membres pour le cours courant.
 			$req = "SELECT mem.id as memId, mem.nom as nom, mem.prenom as prenom, mem.jj, mem.mm, mem.aaaa, tel_urg as telUrg "
@@ -138,32 +140,52 @@
 			if (!$listMembres) {
 				$log->trace("Aucun membre trouvé.");
 				$log->trace(mysql_error());
-				die('Aucun membre trouvé.');
+				//die('Aucun membre trouvé.');
+				$nocours ++;
+				continue;
 			}
 
+			if (mysql_num_rows($listMembres) > 0) {
+				
+							
+				// Gestion du saut de page.
+				$log->trace("Cours ".$nocours."/".$nbcours);
+				if ($nocours != 1) {
+					$log->trace("Ajout d'un saut de page.");
+					$PDF->AddPage();
+				}
+				
+				$PDF->SetFont('Arial','B',14);
+				$PDF->Cell(0, 10, "Cours ".$rowCours['nom'], 1, 1, "C", false);
+				$PDF->SetFont('');
+				$PDF->ln();
+				
+				// Boucle sur les cours trouvés.
+				while ($rowMembres = mysql_fetch_assoc($listMembres)) {
+					
+					$telurg = left( $rowMembres['telUrg'], 2)."."
+								.substr($rowMembres['telUrg'], 2, 2)."."
+								.substr($rowMembres['telUrg'], 4, 2)."."
+								.substr($rowMembres['telUrg'], 6, 2)."."
+								.substr($rowMembres['telUrg'], 8, 2);
+					$datnaiss = right("0".$rowMembres['jj'], 2)."/".right("0".$rowMembres['mm'], 2)."/".$rowMembres['aaaa'];
+					$log->trace("Membre = ".$rowMembres['nom']." ".$rowMembres['prenom']." ".$datnaiss." ".$telurg);
+					array_push($contenuTableau, 
+						$rowMembres['nom'], 
+						$rowMembres['prenom'], 
+						"[C]".$datnaiss, 
+						"[C]".$telurg);
+					
+				}
+				mysql_free_result($listMembres);
+				
+				// Ecriture de la liste pour le cours courant.
+				$PDF->drawTableau($PDF, $proprietesTableau, $proprieteHeader, $contenuHeader, $proprieteContenu, $contenuTableau);
 			
-			// Boucle sur les cours trouvés.
-			while ($rowMembres = mysql_fetch_assoc($listMembres)) {
-				
-				$telurg = left( $rowMembres['telUrg'], 2)."."
-							.substr($rowMembres['telUrg'], 2, 2)."."
-							.substr($rowMembres['telUrg'], 4, 2)."."
-							.substr($rowMembres['telUrg'], 6, 2)."."
-							.substr($rowMembres['telUrg'], 8, 2);
-				$datnaiss = right("0".$rowMembres['jj'], 2)."/".right("0".$rowMembres['mm'], 2)."/".$rowMembres['aaaa'];
-				$log->trace("Membre = ".$rowMembres['nom']." ".$rowMembres['prenom']." ".$datnaiss." ".$telurg);
-				array_push($contenuTableau, 
-					$rowMembres['nom'], 
-					$rowMembres['prenom'], 
-					"[C]".$datnaiss, 
-					"[C]".$telurg);
-				
+				$nocours ++;
+			} else {
+				$nbcours --;
 			}
-			mysql_free_result($listMembres);
-			
-			// Ecriture de la liste pour le cours courant.
-			$PDF->drawTableau($PDF, $proprietesTableau, $proprieteHeader, $contenuHeader, $proprieteContenu, $contenuTableau);
-			$PDF->AddPage();
 
 		}
 		mysql_free_result($listCours);
