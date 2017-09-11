@@ -42,7 +42,7 @@
 		
 		if(	isset($numChq) && !empty($numChq) ) {
 			
-			if($numChq < 10){
+			if($numChq != "COUPON" && $numChq < 10){
 				$motifErreur = "Le numéro du chèque ".$noChq." doit &ecirc;tre supérieur à 10.";
 				$suivant = 1;
 				$res = "";
@@ -465,34 +465,73 @@
 	<?php
 			echo "<table border=0><tr><td>";
 			echo "Le montant du ch&egrave;que N°<font color=red><b>1</b></font> sera de <input type=\"text\" name=\"modif_1\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_1\" value=\"".$cheque_1."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p1_date, 1, 2000))).")</td>";
-			if($p1_num != 0){echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p1_num."</font>";}else{echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";}
+			// Chèque 1.
+			if($p1_num == "COUPON" || $p1_num != 0){
+				echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p1_num."</font>";
+			} else {
+				echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";
+				$motifErreur = "N° de ch&egrave;que 1 inconnu.";
+			}
 			if($p1_banque != ""){
 				$ch_p1_banque = mysql_query("SELECT banque FROM banques WHERE id = '$p1_banque'");
 				$ch_p1_banque = mysql_fetch_array($ch_p1_banque);
-				echo " de la banque <font color=blue>".$ch_p1_banque['banque']."</font></td></tr>";}else{echo " d'une banque inconnue</td></tr>";}
-				echo "<tr><td>Le montant du ch&egrave;que N°<font color=blue><b>2</b></font> sera de <input type=\"text\" name=\"modif_2\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_2\" value=\"".$cheque_2."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p2_date, 1, 2000))).")";
-				if($p2_num != 0){echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p2_num."</font>";}else{echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";}
-					if($p2_banque != ""){
-						$ch_p2_banque = mysql_query("SELECT banque FROM banques WHERE id = '$p2_banque'");
-						$ch_p2_banque = mysql_fetch_array($ch_p2_banque);
-						echo " de la banque <font color=blue>".$ch_p2_banque['banque']."</font></td></tr>";}else{echo " d'une banque inconnue</td></tr>";}
-						echo "<tr><td>Le montant du ch&egrave;que N°<font color=green><b>3</b></font> sera de <input type=\"text\" name=\"modif_3\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_3\" value=\"".$cheque_3."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p3_date, 1, 2000))).")";
-						if($p3_num != 0){echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p3_num."</font>";}else{echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";}
+				echo " de la banque <font color=blue>".$ch_p1_banque['banque']."</font></td></tr>";
+			} else {
+				echo " d'une banque inconnue</td></tr>";
+				$motifErreur = "Banque inconnue pour ch&egrave;que 1.";
+			}				
+
+			// Chèque 2.
+			echo "<tr><td>Le montant du ch&egrave;que N°<font color=blue><b>2</b></font> sera de <input type=\"text\" name=\"modif_2\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_2\" value=\"".$cheque_2."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p2_date, 1, 2000))).")";
+			if($p2_num == "COUPON" || $p2_num != 0){
+				echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p2_num."</font>";
+			} else { 
+				echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";
+				$motifErreur = "N° de ch&egrave;que 2 inconnu.";
+			}
+			if($p2_banque != ""){
+				$ch_p2_banque = mysql_query("SELECT banque FROM banques WHERE id = '$p2_banque'");
+				$ch_p2_banque = mysql_fetch_array($ch_p2_banque);
+				echo " de la banque <font color=blue>".$ch_p2_banque['banque']."</font></td></tr>";
+			} else {
+				echo " d'une banque inconnue</td></tr>";
+				$motifErreur = "Banque inconnue pour ch&egrave;que 2.";
+			}
+			echo "<tr><td>Le montant du ch&egrave;que N°<font color=green><b>3</b></font> sera de <input type=\"text\" name=\"modif_3\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_3\" value=\"".$cheque_3."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p3_date, 1, 2000))).")";
+
+			// Chèque 3.
+			if($p3_num == "COUPON" || $p3_num != 0){
+				echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p3_num."</font>";
+			} else {
+				echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";
+				$motifErreur = "N° de ch&egrave;que 3 inconnu.";
+			}			
 			if($p3_banque != ""){
 				$ch_p3_banque = mysql_query("SELECT banque FROM banques WHERE id = '$p3_banque'");
 				$ch_p3_banque = mysql_fetch_array($ch_p3_banque);
-				echo " de la banque <font color=blue>".$ch_p3_banque['banque']."</font></td></tr>";}else{echo " d'une banque inconnue</td></tr>";}
-				echo "<tr><td>Le montant du ch&egrave;que N°<font color=blue><b>4</b></font> sera de <input type=\"text\" name=\"modif_4\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_4\" value=\"".$cheque_4."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p4_date, 1, 2000))).")";
-				if($p4_num != 0){echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p4_num."</font>";}
-				else{echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";}
-				if($p4_banque != ""){
-					$ch_p4_banque = mysql_query("SELECT banque FROM banques WHERE id = '$p4_banque'");
-					$ch_p4_banque = mysql_fetch_array($ch_p4_banque);
-					echo " de la banque <font color=blue>".$ch_p4_banque['banque']."</font></td></tr>";}else{echo " d'une banque inconnue</td></tr>";
-				}
-				echo "<tr><td colspan=\"3\">";
-				echo $ctrl_cheque;
-				echo"</td></tr></table><br>";
+				echo " de la banque <font color=blue>".$ch_p3_banque['banque']."</font></td></tr>";
+			} else {
+				echo " d'une banque inconnue</td></tr>";
+				$motifErreur = "Banque inconnue pour ch&egrave;que 3.";
+			}
+			echo "<tr><td>Le montant du ch&egrave;que N°<font color=blue><b>4</b></font> sera de <input type=\"text\" name=\"modif_4\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_4\" value=\"".$cheque_4."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p4_date, 1, 2000))).")";
+
+			// Chèque 4.
+			if($p4_num == "COUPON" || $p4_num != 0){
+				echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p4_num."</font>";
+			} else {
+				echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";
+				$motifErreur = "N° de ch&egrave;que 4 inconnu.";
+			}
+			if($p4_banque != ""){
+				$ch_p4_banque = mysql_query("SELECT banque FROM banques WHERE id = '$p4_banque'");
+				$ch_p4_banque = mysql_fetch_array($ch_p4_banque);
+				echo " de la banque <font color=blue>".$ch_p4_banque['banque']."</font></td></tr>";}else{echo " d'une banque inconnue</td></tr>";
+				$motifErreur = "Banque inconnue pour ch&egrave;que 4.";
+			}
+			echo "<tr><td colspan=\"3\">";
+			echo $ctrl_cheque;
+			echo"</td></tr></table><br>";
 		}
 
 		elseif(	isset($_POST["p3_num"]) && !empty($_POST["p3_num"])  &&
@@ -586,7 +625,7 @@
 	<?php
 			echo "<table border=0><tr><td>";
 			echo "Le montant du ch&egrave;que N°<font color=red><b>1</b></font> sera de <input type=\"text\" name=\"modif_1\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_1\" value=\"".$cheque_1."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p1_date, 1, 2000))).")</td>";
-			if($p1_num != 0){
+			if($p1_num == "COUPON" || $p1_num != 0){
 				echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p1_num."</font>";
 			} else {
 				echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";
@@ -599,7 +638,7 @@
 				echo " d'une banque inconnue</td></tr>";
 			}
 			echo "<tr><td>Le montant du ch&egrave;que N°<font color=blue><b>2</b></font> sera de <input type=\"text\" name=\"modif_2\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_2\" value=\"".$cheque_2."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p2_date, 1, 2000))).")";
-			if($p2_num != 0){
+			if($p2_num == "COUPON" || $p2_num != 0){
 				echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p2_num."</font>";
 			} else {
 				echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";
@@ -612,7 +651,7 @@
 				echo " d'une banque inconnue</td></tr>";
 			}
 			echo "<tr><td>Le montant du ch&egrave;que N°<font color=green><b>3</b></font> sera de <input type=\"text\" name=\"modif_3\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_3\" value=\"".$cheque_3."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p3_date, 1, 2000))).")";
-			if($p3_num != 0){
+			if($p3_num == "COUPON" || $p3_num != 0){
 				echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p3_num."</font>";
 			} else { 
 				echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";
@@ -700,7 +739,7 @@
 	<?php
 			echo "<table border=0><tr><td>";
 			echo "Le montant du ch&egrave;que N°<font color=red><b>1</b></font> sera de <input type=\"text\" name=\"modif_1\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_1\" value=\"".$cheque_1."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p1_date, 1, 2000))).")</td>";
-			if($p1_num != 0){
+			if($p1_num == "COUPON" || $p1_num != 0){
 				echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p1_num."</font>";
 			} else {
 				echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";
@@ -713,7 +752,7 @@
 				echo " d'une banque inconnue</td></tr>";
 			}
 			echo "<tr><td>Le montant du ch&egrave;que N°<font color=blue><b>2</b></font> sera de <input type=\"text\" name=\"modif_2\" size=\"1\" onkeyup=\"recalcule()\" id=\"id_2\" value=\"".$cheque_2."\" style=\"color : red\"".$moduler_cheque."><font color=red>€.</font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p2_date, 1, 2000))).")";
-			if($p2_num != 0){
+			if($p2_num == "COUPON" || $p2_num != 0){
 				echo "<td width=10></td><td>Ch&egrave;que N° <font color=blue>".$p2_num."</font>";
 			} else {
 				echo "<td width=10></td><td>Num&eacute;ro de ch&egrave;que inconnu";
@@ -761,7 +800,7 @@
 	<input type="hidden" id="p3_date" name="p3_date" value="">
 	<?php
 			echo "Le montant du ch&egrave;que N°<font color=red><b>1</b></font> sera de <font color=red>".$cheque_1." €. </font> (".ucfirst(strftime("%B", mktime(0, 0, 0, $p2_date, 1, 2000))).")";
-			if($p1_num != 0){
+			if($p1_num == "COUPON" || $p1_num != 0){
 				echo "Ch&egrave;que N° <font color=blue>".$p1_num."</font>";
 			} else {
 				echo "Num&eacute;ro de ch&egrave;que inconnu";

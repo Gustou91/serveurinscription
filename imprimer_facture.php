@@ -383,7 +383,8 @@
 		$PDF->Write(5, "Association Loi 1901 - N° Siren 447 720 699 00027 - Catégorie juridique: 9220 Association déclarée");
 
 
-		$PDF->Output();
+		//$PDF->Output();
+		$PDF->Output("FACT-".$numFact."_".str_replace(" ","_",$nom).".pdf",'I');
 
 	}
 

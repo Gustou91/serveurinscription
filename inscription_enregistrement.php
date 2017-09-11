@@ -13,7 +13,7 @@
 <?php
 
 	function setVar($data, $default) {
-		return ( isset($data]) && !empty($data]) ? $data : $default;
+		return ( isset($data) && !empty($data)) ? $data : $default;
 	}
 	
 
@@ -21,6 +21,11 @@
 	mysql_connect($adresse, $user, $pass);
 	mysql_select_db($bdd);mysql_set_charset( 'utf8' );
 
+	$p1_date = "";
+	$p2_date = "";
+	$p3_date = "";
+	$p4_date = "";
+	
 	$id_membre = $_POST["id_membre"];
 	$total = $_POST["total"];
 	if(isset($_POST["prix_caution"])){
@@ -79,7 +84,7 @@
 		$p2_num = setVar($_POST["p2_num"], 0);
 		$p3_num = setVar($_POST["p3_num"], 0);
 		$p4_num = setVar($_POST["p4_num"], 0);
-		$p1_prix = setVar($_POST["p1_prix"], 0");
+		$p1_prix = setVar($_POST["p1_prix"], 0);
 		$p2_prix = setVar($_POST["p2_prix"], 0);
 		$p3_prix = setVar($_POST["p3_prix"], 0);
 		$p4_prix = setVar($_POST["p4_prix"], 0);

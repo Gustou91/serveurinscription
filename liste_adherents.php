@@ -89,6 +89,7 @@
 		$PDF = new phpToPDF();
 		$PDF->AddPage();
 		$PDF->SetSubject("Liste des adhérents", true);
+		$PDF->startPageNums();
 
 		$PDF->Image('img/LOGO-JUJITSO2.jpg',10,10,20);
 		$PDF->Cell(50);
@@ -156,7 +157,7 @@
 				}
 				
 				$PDF->SetFont('Arial','B',14);
-				$PDF->Cell(0, 10, "Cours ".$rowCours['nom'], 1, 1, "C", false);
+				$PDF->Cell(0, 10, "Cours ".$rowCours['nom']." (".mysql_num_rows($listMembres)." membres)", 1, 1, "C", false);
 				$PDF->SetFont('');
 				$PDF->ln();
 				
@@ -190,7 +191,7 @@
 		}
 		mysql_free_result($listCours);
 		
-		$PDF->Output();
+		$PDF->Output("ListeDesAdhérents-Saison_".str_replace("/","-",$saison).".pdf",'I');
 		
 	} else die('Précisez la saison.');
 ?>

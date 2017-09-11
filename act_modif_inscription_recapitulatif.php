@@ -222,10 +222,10 @@ if(	isset($_POST["p2_banque"]) && !empty($_POST["p2_banque"])){$p2_banque = $_PO
 if(	isset($_POST["p1_num"]) && !empty($_POST["p1_num"])){$p1_num = $_POST["p1_num"];}else{$suivant=0;}
 if(	isset($_POST["p1_banque"]) && !empty($_POST["p1_banque"])){$p1_banque = $_POST["p1_banque"];}else{$suivant=0;}
 
-if($p1_num < 10){$suivant=0;}
-if($p2_num < 10){$suivant=0;}
-if($p3_num < 10){$suivant=0;}
-if($p4_num < 10){$suivant=0;}
+if($p1_num < 1){$suivant=0;}
+if($p2_num < 1){$suivant=0;}
+if($p3_num < 1){$suivant=0;}
+if($p4_num < 1){$suivant=0;}
 ?>
 
 <script type="text/javascript">
@@ -319,9 +319,9 @@ if(	isset($_POST["p2_banque"]) && !empty($_POST["p2_banque"])){$p2_banque = $_PO
 if(	isset($_POST["p1_num"]) && !empty($_POST["p1_num"])){$p1_num = $_POST["p1_num"];}else{$suivant=0;}
 if(	isset($_POST["p1_banque"]) && !empty($_POST["p1_banque"])){$p1_banque = $_POST["p1_banque"];}else{$suivant=0;}
 
-if($p1_num < 10){$suivant=0;}
-if($p2_num < 10){$suivant=0;}
-if($p3_num < 10){$suivant=0;}
+if($p1_num < 1){$suivant=0;}
+if($p2_num < 1){$suivant=0;}
+if($p3_num < 1){$suivant=0;}
 ?>
 
 <script type="text/javascript">
@@ -400,8 +400,8 @@ $cheque_2 = ($prix_cours);
 if(	isset($_POST["p1_num"]) && !empty($_POST["p1_num"])){$p1_num = $_POST["p1_num"];}else{$suivant=0;}
 if(	isset($_POST["p1_banque"]) && !empty($_POST["p1_banque"])){$p1_banque = $_POST["p1_banque"];}else{$suivant=0;}
 
-if($p1_num < 10){$suivant=0;}
-if($p2_num < 10){$suivant=0;}
+if($p1_num < 1){$suivant=0;}
+if($p2_num < 1){$suivant=0;}
 ?>
 
 <script type="text/javascript">
@@ -464,7 +464,7 @@ $p1_num = $_POST["p1_num"];
 $p1_banque = $_POST["p1_banque"];
 $cheque_1 = $prix_activite + $prix_cours + $prix_frais + $reduc_manu;
 
-if($p1_num < 10){$suivant=0;}
+if($p1_num < 1){$suivant=0;}
 ?>
 
 <input type="hidden" name="espece" value="0">
