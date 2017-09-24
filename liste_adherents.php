@@ -60,8 +60,8 @@
 
 		// Contenu du header du tableau.	
 		$contenuHeader = array(
-			70, 60, 30, 30,
-			"[CB]Nom", "[CB]Prénom", "[CB]Date de naissance", "[CB]Tel urgence",
+			50, 30, 25, 30, 55,
+			"[CB]Nom", "[CB]Prénom", "[CB]Date de naissance", "[CB]Tel urgence", "[CB]Mail",
 		);
 
 		// Définition des propriétés du reste du contenu du tableau.	
@@ -129,7 +129,7 @@
 			
 			
 			// Récupération de la liste des membres pour le cours courant.
-			$req = "SELECT mem.id as memId, mem.nom as nom, mem.prenom as prenom, mem.jj, mem.mm, mem.aaaa, tel_urg as telUrg "
+			$req = "SELECT mem.id as memId, mem.nom as nom, mem.prenom as prenom, mem.jj, mem.mm, mem.aaaa, tel_urg as telUrg, mail "
 			."FROM membres mem LEFT JOIN inscriptions ins on mem.id = ins.id_membre "
 			."LEFT JOIN inscriptions_cours ico on ins.id = ico.id_inscriptions "
 			."WHERE ico.id_cours = '".$rowCours['id']."' AND ins.saison = '".$saison."' AND mem.actif = 1 and ins.actif = 1 and ico.actif = 1 "
@@ -175,7 +175,8 @@
 						$rowMembres['nom'], 
 						$rowMembres['prenom'], 
 						"[C]".$datnaiss, 
-						"[C]".$telurg);
+						"[C]".$telurg,
+						$rowMembres['mail']);
 					
 				}
 				mysql_free_result($listMembres);
