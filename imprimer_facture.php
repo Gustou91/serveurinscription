@@ -135,9 +135,10 @@
 	
 		// Requête des récupération des informations sur l'inscription et le membre inscrit.
 		$req = "SELECT ins.id, ins.date, ins.id_membre, ins.total as Total, ins.saison, mbr.nom as Nom, "
-				."mbr.prenom as Prenom, mbr.adresse as Adresse, mbr.cp as cp, mbr.ville as Ville, mbr.mail, "
+				."mbr.prenom as Prenom, mbr.adresse as Adresse, mbr.cp as cp, vil.ville as Ville, mbr.mail, "
 				."p1_num as numChq1, p2_num as numChq2, p3_num as numChq3, p4_num as numChq4 "
 				."FROM inscriptions ins left join membres mbr on ins.id_membre = mbr.id "
+				."left join villes vil on mbr.ville = vil.id "
 				."where ins.id = '$id_inscription';";
 			  
 		$inscription = mysql_query($req);
